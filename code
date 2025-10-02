@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lost & Found – QR Tracker</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+    color: #333;
+    text-align: center;
+    padding: 20px;
+}
+h1 { color: #007acc; }
+input {
+    padding: 10px;
+    margin: 5px;
+    width: 80%;
+    max-width: 300px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 5px;
+    border: none;
+    background: #007acc;
+    color: white;
+    cursor: pointer;
+}
+button:hover { background: #005f99; }
+#qrcode, #notifications {
+    margin-top: 20px;
+    padding: 10px;
+    background: #fff;
+    display: inline-block;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+#notifications { text-align: left; max-width: 350px; }
+</style>
+</head>
+<body>
+
+<h1>Lost & Found – QR Tracker</h1>
+
+<h2>Step 1: Owner – Generate Your QR</h2>
+<input id="ownerName" type="text" placeholder="Your Name"><br>
+<input id="ownerContact" type="text" placeholder="Your Email/Number"><br>
+<button id="generateQR">Generate QR</button>
+
+<div id="qrcode"></div>
+
+<h2>Step 2: Finder – Enter Your Info</h2>
+<input id="finderName" type="text" placeholder="Finder Name"><br>
+<input id="finderContact" type="text" placeholder="Finder Email/Number"><br>
+<button id="notifyOwner">Notify Owner</button>
+
+<h2>Notifications:</h2>
+<div id="notifications">No notifications yet.</div>
+
+<!-- QRCode library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// Store notifications in browser memory
+const notifications = [];
+
+// Generate QR
+document.getElementById('generateQR').onclick = () => {
+    const ownerName = document.getElementById('ownerName').value.trim();
+    const ownerContact = document.getElementById('ownerContact').value.trim();
+    if(!ownerName || !ownerContact){
+        alert("Please fill both fields");
+        return;
+    }
+    document.getElementById('qrcode').innerHTML = '';
+    new QRCode(document.getElementById('qrcode'), {
+        text: `Owner Name: ${ownerName}\nOwner Contact: ${ownerContact}`,
+        width: 200,
+        height: 200
+    });
+    alert("QR Code generated! Share it with finders.");
+};
+
+// Notify owner (client-side)
+document.getElementById('notifyOwner').onclick = () => {
+    const finderName = document.getElementById('finderName').value.trim();
+    const finderContact = document.getElementById('finderContact').value.trim();
+    if(!finderName || !finderContact){
+        alert("Please fill both fields");
+        return;
+    }
+    notifications.push(`Finder: ${finderName}, Contact: ${finderContact}`);
+    document.getElementById('notifications').innerHTML = notifications.join('<br>');
+    alert("Notification added (simulated client-side)");
+    document.getElementById('finderName').value = '';
+    document.getElementById('finderContact').value = '';
+};
+</script>
+
+</body>
+</html>
